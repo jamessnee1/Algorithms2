@@ -1,0 +1,150 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		597B8D6919C0088200FF953E /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		597B8D6A19C0088200FF953E /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		597B8D6B19C0088200FF953E /* pq.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pq.c; sourceTree = "<group>"; };
+		597B8D6C19C0088200FF953E /* pq.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pq.h; sourceTree = "<group>"; };
+		597B8D6E19C0088200FF953E /* map00.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = map00.txt; sourceTree = "<group>"; };
+		597B8D6F19C0088200FF953E /* map01.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = map01.txt; sourceTree = "<group>"; };
+		597B8D7019C0088200FF953E /* map02.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = map02.txt; sourceTree = "<group>"; };
+		597B8D7119C0088200FF953E /* map03.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = map03.txt; sourceTree = "<group>"; };
+		597B8D7219C0088200FF953E /* map04.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = map04.txt; sourceTree = "<group>"; };
+		597B8D7319C0088200FF953E /* map05.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = map05.txt; sourceTree = "<group>"; };
+		597B8D7419C0088200FF953E /* maze01.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = maze01.txt; sourceTree = "<group>"; };
+		597B8D7519C0088200FF953E /* maze02.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = maze02.txt; sourceTree = "<group>"; };
+		597B8D7619C0088200FF953E /* maze03.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = maze03.txt; sourceTree = "<group>"; };
+		597B8D7719C0088200FF953E /* maze04.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = maze04.txt; sourceTree = "<group>"; };
+		597B8D7819C0088200FF953E /* maze05.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = maze05.txt; sourceTree = "<group>"; };
+		597B8D7919C0088200FF953E /* patchgen.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = patchgen.py; sourceTree = "<group>"; };
+		597B8D7B19C0088200FF953E /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		597B8D7C19C0088200FF953E /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		597B8D7D19C0088200FF953E /* pq.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pq.c; sourceTree = "<group>"; };
+		597B8D7E19C0088200FF953E /* pq.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pq.h; sourceTree = "<group>"; };
+		597B8D8019C0088200FF953E /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		597B8D8119C0088200FF953E /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		597B8D8219C0088200FF953E /* pq.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pq.c; sourceTree = "<group>"; };
+		597B8D8319C0088200FF953E /* pq.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pq.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		59635C2B19C0086A0035F007 = {
+			isa = PBXGroup;
+			children = (
+				597B8D6819C0088200FF953E /* astar */,
+				597B8D6D19C0088200FF953E /* maps */,
+				597B8D7A19C0088200FF953E /* pq */,
+				597B8D7F19C0088200FF953E /* ucs */,
+			);
+			sourceTree = "<group>";
+		};
+		597B8D6819C0088200FF953E /* astar */ = {
+			isa = PBXGroup;
+			children = (
+				597B8D6919C0088200FF953E /* main.c */,
+				597B8D6A19C0088200FF953E /* Makefile */,
+				597B8D6B19C0088200FF953E /* pq.c */,
+				597B8D6C19C0088200FF953E /* pq.h */,
+			);
+			path = astar;
+			sourceTree = "<group>";
+		};
+		597B8D6D19C0088200FF953E /* maps */ = {
+			isa = PBXGroup;
+			children = (
+				597B8D6E19C0088200FF953E /* map00.txt */,
+				597B8D6F19C0088200FF953E /* map01.txt */,
+				597B8D7019C0088200FF953E /* map02.txt */,
+				597B8D7119C0088200FF953E /* map03.txt */,
+				597B8D7219C0088200FF953E /* map04.txt */,
+				597B8D7319C0088200FF953E /* map05.txt */,
+				597B8D7419C0088200FF953E /* maze01.txt */,
+				597B8D7519C0088200FF953E /* maze02.txt */,
+				597B8D7619C0088200FF953E /* maze03.txt */,
+				597B8D7719C0088200FF953E /* maze04.txt */,
+				597B8D7819C0088200FF953E /* maze05.txt */,
+				597B8D7919C0088200FF953E /* patchgen.py */,
+			);
+			path = maps;
+			sourceTree = "<group>";
+		};
+		597B8D7A19C0088200FF953E /* pq */ = {
+			isa = PBXGroup;
+			children = (
+				597B8D7B19C0088200FF953E /* main.c */,
+				597B8D7C19C0088200FF953E /* Makefile */,
+				597B8D7D19C0088200FF953E /* pq.c */,
+				597B8D7E19C0088200FF953E /* pq.h */,
+			);
+			path = pq;
+			sourceTree = "<group>";
+		};
+		597B8D7F19C0088200FF953E /* ucs */ = {
+			isa = PBXGroup;
+			children = (
+				597B8D8019C0088200FF953E /* main.c */,
+				597B8D8119C0088200FF953E /* Makefile */,
+				597B8D8219C0088200FF953E /* pq.c */,
+				597B8D8319C0088200FF953E /* pq.h */,
+			);
+			path = ucs;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		59635C2C19C0086A0035F007 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+			};
+			buildConfigurationList = 59635C2F19C0086A0035F007 /* Build configuration list for PBXProject "aa2" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 59635C2B19C0086A0035F007;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		59635C3019C0086A0035F007 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		59635C3119C0086A0035F007 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		59635C2F19C0086A0035F007 /* Build configuration list for PBXProject "aa2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				59635C3019C0086A0035F007 /* Debug */,
+				59635C3119C0086A0035F007 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 59635C2C19C0086A0035F007 /* Project object */;
+}
