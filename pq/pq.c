@@ -17,7 +17,7 @@ struct priority_queue *pq_create()
     pq_t *new;
     /*allocate memory for heapnode array here*/
     new = malloc(sizeof(pq_t));
-    new->heap = malloc(sizeof(struct heapnode));
+    new->heap = malloc(sizeof(struct heapnode) * HEAP_ARRAY_SIZE);
     new->size = 0;
 	return new;
 }
@@ -44,11 +44,8 @@ void pq_destroy(struct priority_queue *pq)
 	returns: int, the size of the pq
 */
 int pq_size(struct priority_queue *pq) {
-	/* you will need to implement this */
-    pq_t *ptr;
-    ptr = pq;
-
-	return ptr->size;
+	
+	return pq->size;
 }
 
 
@@ -59,19 +56,10 @@ int pq_size(struct priority_queue *pq) {
 */
 int pq_enqueue(struct priority_queue *pq, int val, int priority)
 {
-	/* you will need to implement this */
-    pq_t *ptr;
-    ptr = pq;
-    
-    
-    /*create a new node for our data*/
-    struct heapnode *newdata = malloc(sizeof(struct heapnode));
-    newdata->val = val;
-    newdata->priority = priority;
-    
-    
-    
-	return 0;
+    pq->heap[pq->size].val = val;
+    pq->heap[pq->size].priority = priority;
+    (pq->size)++;
+    return 1;
 }
 
 /*
@@ -82,8 +70,24 @@ int pq_enqueue(struct priority_queue *pq, int val, int priority)
 */	
 int pq_find(struct priority_queue *pq, int *val, int *priority)
 {
-	/* you will need to implement this */
-	return 0;	
+    int i = 0;
+    /*when we find it store our lowest value in here*/
+    int lowestvalue;
+    if (pq->size == 0){
+        /*empty*/
+        return 0;
+    }
+    
+    for (i = 0; i < pq->size; i++){
+    
+        if (pq_cmp(pq, priority, pq->heap[i].priority) == -1){
+            lowestvalue = pq->heap[i].val;
+        }
+    
+    }
+    
+    
+	return 1;
 }
 
 /*
@@ -120,7 +124,12 @@ int pq_dequeue(struct priority_queue *pq, int *val, int *priority)
 */
 int pq_cmp(struct priority_queue *pq, int a, int b)
 {
-	/* you will need to implement this */
+    if (a < b){
+        return -1;
+    }else if (a > b){
+        return 1;
+    }
+    
 	return 0;
 }
 
@@ -131,5 +140,8 @@ int pq_cmp(struct priority_queue *pq, int a, int b)
 void pq_swap(struct priority_queue *pq, int a, int b)
 {
 	/* you will need to implement this */
+    
+    int temp;
+    
 	return;
 }
