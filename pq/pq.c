@@ -18,6 +18,7 @@ struct priority_queue *pq_create()
     /*allocate memory for heapnode array here*/
     new = malloc(sizeof(pq_t));
     new->heap = malloc(sizeof(struct heapnode) * HEAP_ARRAY_SIZE);
+    new->heap[0].val = HEAP_ARRAY_SIZE;
     new->size = 0;
 	return new;
 }
@@ -44,7 +45,6 @@ void pq_destroy(struct priority_queue *pq)
 	returns: int, the size of the pq
 */
 int pq_size(struct priority_queue *pq) {
-	
 	return pq->size;
 }
 
@@ -56,10 +56,24 @@ int pq_size(struct priority_queue *pq) {
 */
 int pq_enqueue(struct priority_queue *pq, int val, int priority)
 {
-    pq->heap[pq->size].val = val;
-    pq->heap[pq->size].priority = priority;
-    (pq->size)++;
-    return 1;
+    
+    if (priority < 0){
+        return 0;
+    }
+    
+    if (sizeof(pq->heap) > sizeof(struct heapnode) * HEAP_ARRAY_SIZE){
+        printf("Error: Queue full!\n");
+        return 0;
+    }
+    else {
+        /*we are right to insert*/
+        pq->heap[pq->size].val = val;
+        pq->heap[pq->size].priority = priority;
+        pq->size++;
+        return 1;
+    
+    }
+    return 0;
 }
 
 /*
@@ -70,23 +84,13 @@ int pq_enqueue(struct priority_queue *pq, int val, int priority)
 */	
 int pq_find(struct priority_queue *pq, int *val, int *priority)
 {
-    int i = 0;
-    /*when we find it store our lowest value in here*/
-    int lowestvalue;
     if (pq->size == 0){
-        /*empty*/
         return 0;
     }
-    
-    for (i = 0; i < pq->size; i++){
-    
-        if (pq_cmp(pq, priority, pq->heap[i].priority) == -1){
-            lowestvalue = pq->heap[i].val;
-        }
-    
-    }
-    
-    
+    *val = pq->heap[1].val;
+    printf ("Val to return is %i\n", *val);
+    *priority = pq->heap[1].priority;
+    printf ("Priority to return is %i\n", *priority);
 	return 1;
 }
 
@@ -126,11 +130,12 @@ int pq_cmp(struct priority_queue *pq, int a, int b)
 {
     if (a < b){
         return -1;
-    }else if (a > b){
+    }
+    else if (a > b){
         return 1;
     }
     
-	return 0;
+    return 0;
 }
 
 /*
@@ -141,7 +146,7 @@ void pq_swap(struct priority_queue *pq, int a, int b)
 {
 	/* you will need to implement this */
     
-    int temp;
     
 	return;
 }
+

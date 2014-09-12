@@ -65,7 +65,7 @@ int run_pq_test(int testcase)
 		val = prio = 0;
 		if (!pq_find(pq, &val, &prio)) { break; }
 		if (val != 1 || prio != 1) { break; }
-		if (pq_size(pq) != 1) { break; }		
+		if (pq_size(pq) != 1) { break; }
 		ret = 1;
 		break;
 
