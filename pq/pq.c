@@ -67,9 +67,10 @@ int pq_enqueue(struct priority_queue *pq, int val, int priority)
     }
     else {
         /*we are right to insert*/
+        pq->size++;
         pq->heap[pq->size].val = val;
         pq->heap[pq->size].priority = priority;
-        pq->size++;
+        
         return 1;
     
     }
@@ -87,9 +88,9 @@ int pq_find(struct priority_queue *pq, int *val, int *priority)
     if (pq->size == 0){
         return 0;
     }
-    *val = pq->heap[1].val;
+    *val = pq->heap[pq->size].val;
     printf ("Val to return is %i\n", *val);
-    *priority = pq->heap[1].priority;
+    *priority = pq->heap[pq->size].priority;
     printf ("Priority to return is %i\n", *priority);
 	return 1;
 }
