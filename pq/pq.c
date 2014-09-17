@@ -89,9 +89,7 @@ int pq_find(struct priority_queue *pq, int *val, int *priority)
         return 0;
     }
     *val = pq->heap[pq->size].val;
-    printf ("Val to return is %i\n", *val);
     *priority = pq->heap[pq->size].priority;
-    printf ("Priority to return is %i\n", *priority);
 	return 1;
 }
 
@@ -103,8 +101,13 @@ int pq_find(struct priority_queue *pq, int *val, int *priority)
 */
 int pq_delete(struct priority_queue *pq)
 {
-	/* you will need to implement this */
-	return 0;
+	if (pq->size == 0){
+        return 0;
+    }
+    pq->heap[pq->size].val = 0;
+    pq->heap[pq->size].priority = 0;
+    pq->size--;
+	return 1;
 }
 
 
@@ -118,7 +121,9 @@ int pq_delete(struct priority_queue *pq)
 int pq_dequeue(struct priority_queue *pq, int *val, int *priority)
 {
 	/* you will need to implement this */
-	return 0;
+    pq_find(pq, &val, &priority);
+    pq_delete(pq);
+	return 1;
 }
 
 /*
