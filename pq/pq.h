@@ -6,7 +6,8 @@
 #define PQ_H
 
 /* constants */
-#define MAX_HEAP_SIZE	(256*256*16 - 1)
+/*#define MAX_HEAP_SIZE	(256*256*16 - 1)*/
+#define MAX_HEAP_SIZE (100)
 #define HEAP_ARRAY_SIZE (MAX_HEAP_SIZE + 1)
 /* you may want to use a smaller value while testing */
 #define LARGE_TEST_SIZE (MAX_HEAP_SIZE)
@@ -89,7 +90,8 @@ int pq_size(pq_t *pq);
 	You can define other functions if you wish,
 	but do not change the prototypes for the functions above
 */
-
+void print_pq(struct priority_queue *pq);
+void heapify(struct priority_queue *pq, int position);
 
 /*****************/
 /* end PQ header */

@@ -61,20 +61,29 @@ int pq_enqueue(struct priority_queue *pq, int val, int priority)
         return 0;
     }
     
-    if (sizeof(pq->heap) > sizeof(struct heapnode) * HEAP_ARRAY_SIZE){
+    if (pq->size > HEAP_ARRAY_SIZE){
         printf("Error: Queue full!\n");
         return 0;
     }
     else {
         /*we are right to insert*/
+        struct heapnode new;
+        /*set variables*/
+        new.val = val;
+        new.priority = priority;
         pq->size++;
-        pq->heap[pq->size].val = val;
-        pq->heap[pq->size].priority = priority;
+        pq->heap[pq_size(pq)] = new;
         
-        return 1;
+        
+        /*Adjust its position*/
+        int i;
+        for (i = (pq->size/2); i > 1; i--){
+            heapify(pq, i);
+        
+        }
     
     }
-    return 0;
+    return 1;
 }
 
 /*
@@ -88,8 +97,8 @@ int pq_find(struct priority_queue *pq, int *val, int *priority)
     if (pq->size == 0){
         return 0;
     }
-    *val = pq->heap[pq->size].val;
-    *priority = pq->heap[pq->size].priority;
+    *val = pq->heap[1].val;
+    *priority = pq->heap[1].priority;
 	return 1;
 }
 
@@ -101,12 +110,17 @@ int pq_find(struct priority_queue *pq, int *val, int *priority)
 */
 int pq_delete(struct priority_queue *pq)
 {
-	if (pq->size == 0){
+	if (pq_size(pq) == 0){
         return 0;
     }
-    pq->heap[pq->size].val = 0;
-    pq->heap[pq->size].priority = 0;
+    
+    /*need to remove the first element of the array*/
+    pq->heap[1] = pq->heap[pq_size(pq)-1];
     pq->size--;
+
+    /*maintain the heap property*/
+    heapify(pq, 1);
+    
 	return 1;
 }
 
@@ -120,8 +134,11 @@ int pq_delete(struct priority_queue *pq)
 */	
 int pq_dequeue(struct priority_queue *pq, int *val, int *priority)
 {
-	/* you will need to implement this */
-    pq_find(pq, &val, &priority);
+    if (pq_size(pq) == 0){
+        return 0;
+    }
+	
+    pq_find(pq, val, priority);
     pq_delete(pq);
 	return 1;
 }
@@ -134,13 +151,12 @@ int pq_dequeue(struct priority_queue *pq, int *val, int *priority)
 */
 int pq_cmp(struct priority_queue *pq, int a, int b)
 {
-    if (a < b){
+    if (pq->heap[a].priority < pq->heap[b].priority){
         return -1;
     }
-    else if (a > b){
+    else if (pq->heap[a].priority > pq->heap[b].priority){
         return 1;
     }
-    
     return 0;
 }
 
@@ -151,8 +167,46 @@ int pq_cmp(struct priority_queue *pq, int a, int b)
 void pq_swap(struct priority_queue *pq, int a, int b)
 {
 	/* you will need to implement this */
-    
-    
+    struct heapnode temp;
+    temp = pq->heap[a];
+    pq->heap[a] = pq->heap[b];
+    pq->heap[b] = temp;
 	return;
 }
+
+void print_pq(struct priority_queue *pq){
+
+    int i;
+    for (i = 1; i < pq->size; i++){
+        printf("Priority of element %i is %i\n", i, pq->heap[i].priority);
+    }
+    printf("\n");
+    
+}
+
+void heapify(struct priority_queue *pq, int i){
+    
+    int l = 2*i;
+    int r = 2*i + 1;
+    int min = 0;
+    /*if the left node is greater than the parent node, store it at min*/
+    if (l <= pq->size && pq_cmp(pq, l, i) < 0){
+        min = l;
+        
+    }else{
+        /*if not, store parent node*/
+        min = i;
+    }
+    /*if the right node is greater than the parent node, store it at min*/
+    if (r <= pq->size && pq_cmp(pq, r, min) < 0){
+        min = r;
+    }
+
+    if (min != i){
+        pq_swap(pq, i, min);
+        heapify(pq, min);
+    }
+}
+
+
 
