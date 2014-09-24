@@ -78,9 +78,9 @@ int pq_enqueue(struct priority_queue *pq, int val, int priority)
         int i;
         for (i = (pq->size/2); i >= 1; i--){
             heapify(pq, i);
-        
+            
         }
-    
+
     }
     return 1;
 }
@@ -114,7 +114,7 @@ int pq_delete(struct priority_queue *pq)
     }
     
     /*need to remove the first element of the array*/
-    pq->heap[1] = pq->heap[pq_size(pq)-1];
+    pq->heap[1] = pq->heap[pq_size(pq)];
     pq->size--;
 
     /*maintain the heap property*/

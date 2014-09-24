@@ -100,7 +100,7 @@ int run_pq_test(int testcase)
 			if (!pq_dequeue(pq, &val, &prio)) { ret = 0; }
 			if (prio != i) { ret = 0; }
 			if (!heaptest(pq)) { ret = 0; }
-			if (pq_size(pq) != (n-i-1)) { ret = 0; }			
+			if (pq_size(pq) != (n-i-1)) { ret = 0; }
 		}
 		break;
 
