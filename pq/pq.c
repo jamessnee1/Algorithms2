@@ -74,12 +74,9 @@ int pq_enqueue(struct priority_queue *pq, int val, int priority)
         pq->size++;
         pq->heap[pq_size(pq)] = new;
         
-        
         /*Maintain the heap property*/
         int i;
         for (i = (pq->size/2); i >= 1; i--){
-            /*the following line passes test 7 but breaks test 4*/
-            /*pq_swap(pq, 1, i);*/
             heapify(pq, i);
         
         }
