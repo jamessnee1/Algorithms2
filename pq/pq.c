@@ -75,9 +75,11 @@ int pq_enqueue(struct priority_queue *pq, int val, int priority)
         pq->heap[pq_size(pq)] = new;
         
         
-        /*Adjust its position*/
+        /*Maintain the heap property*/
         int i;
-        for (i = (pq->size/2); i > 1; i--){
+        for (i = (pq->size/2); i >= 1; i--){
+            /*the following line passes test 7 but breaks test 4*/
+            /*pq_swap(pq, 1, i);*/
             heapify(pq, i);
         
         }
@@ -187,23 +189,24 @@ void print_pq(struct priority_queue *pq){
 void heapify(struct priority_queue *pq, int i){
     
     int l = 2*i;
-    int r = 2*i + 1;
+    int r = (2*i) + 1;
     int min = 0;
-    /*if the left node is greater than the parent node, store it at min*/
-    if (l <= pq->size && pq_cmp(pq, l, i) < 0){
+    /*if the left node is less than the parent node, store it at min*/
+    if (l <= pq_size(pq) && pq_cmp(pq, l, i) < 0){
         min = l;
         
     }else{
         /*if not, store parent node*/
         min = i;
     }
-    /*if the right node is greater than the parent node, store it at min*/
-    if (r <= pq->size && pq_cmp(pq, r, min) < 0){
+    /*if the right node is less than the parent node, store it at min*/
+    if (r <= pq_size(pq) && pq_cmp(pq, r, min) < 0){
         min = r;
+    
     }
 
     if (min != i){
-        pq_swap(pq, i, min);
+        pq_swap(pq, min, i);
         heapify(pq, min);
     }
 }
