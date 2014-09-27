@@ -31,6 +31,7 @@
 		597B8D8119C0088200FF953E /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		597B8D8219C0088200FF953E /* pq.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pq.c; sourceTree = "<group>"; };
 		597B8D8319C0088200FF953E /* pq.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pq.h; sourceTree = "<group>"; };
+		59D1B5C819D6BBEB0010F8F0 /* sample.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = sample.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -92,6 +93,7 @@
 				597B8D8119C0088200FF953E /* Makefile */,
 				597B8D8219C0088200FF953E /* pq.c */,
 				597B8D8319C0088200FF953E /* pq.h */,
+				59D1B5C819D6BBEB0010F8F0 /* sample.txt */,
 			);
 			path = ucs;
 			sourceTree = "<group>";
