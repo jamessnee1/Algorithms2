@@ -6,8 +6,8 @@
 #define PQ_H
 
 /* constants */
-/*#define MAX_HEAP_SIZE	(256*256*16 - 1)*/
-#define MAX_HEAP_SIZE (1000)
+#define MAX_HEAP_SIZE	(256*256*16 - 1)
+/*#define MAX_HEAP_SIZE (1000)*/
 #define HEAP_ARRAY_SIZE (MAX_HEAP_SIZE + 1)
 /* you may want to use a smaller value while testing */
 #define LARGE_TEST_SIZE (MAX_HEAP_SIZE)
