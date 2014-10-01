@@ -117,6 +117,11 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
     /* mark the start and end positions */
 	map->grid[y0*map->width+x0].glyph = 'A';
 	map->grid[y1*map->width+x1].glyph = 'B';
+    printf("The start position is %i\n",y0*map->width+x0);
+    printf("The end position is %i\n", y1*map->width+x1);
+    
+    /*create new temp node which will be the current node*/
+    struct square current;
     
     /*mark all nodes as unvisited*/
     int i;
@@ -130,6 +135,10 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
     struct priority_queue *pq = pq_create();
     /*Insert the root into the queue*/
     pq_enqueue(pq, (y0*map->width+x0), 0);
+    /*create new struct array containing explored nodes, this will be used to calculate path cost */
+    struct square *explored;
+    explored = malloc(sizeof(struct square) * map->width * map->height);
+    int explored_size = 0;
     
     if (pq->size != 0){
     
@@ -142,10 +151,27 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
                 printf("Goal\n");
             }
             else {
-                /*else mark as visited*/
+                /*else mark as visited and put in explored array*/
                 map->grid->visited = 1;
+                explored[explored_size] = *map->grid;
+                explored_size++;
                 
             }
+            
+            /*for each of the nodes neighbours, if the node isnt explored and not in queue*/
+            /*add to queue. else if neighbour is in queue with higher cost, replace existing*/
+            /*with neighbouring node*/
+            /*for (each neighbour){
+                if (n is not explored){
+                    if (n is not in queue){
+                        pq_enqueue(n);
+                    }
+                    else if (n is in queue with higher cost){
+                        pq_swap(existing node, n)
+                    }
+                }
+             
+             }*/
             
             
         }
@@ -160,6 +186,7 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
     /*draw the map*/
     print_map(map);
 	curses_draw_map(map);
+    printf("Total cost: %i\n", explored_size);
     
     
 
