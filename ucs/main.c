@@ -39,11 +39,13 @@ struct square {
 	char glyph;		/* symbol to display this square */
 	int cost;		/* cost for the edges to this square */
 	/* you may need to add more variables to this struct */
+    int visited;
 };
 struct map {
 	struct square *grid;	/* 2D grid of squares as an array */
 	int width;		/* width of the map */
 	int height;		/* height of the map */
+    int size;       /*size of the map*/
 };
 
 /* global for time interval and also whether to use curses animation */
@@ -88,6 +90,7 @@ void end_curses(void);
 void curses_draw_map(struct map *map);
 
 /* You may and are encouraged to add your own functions. */
+void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1);
 
 
 
@@ -96,12 +99,80 @@ void curses_draw_map(struct map *map);
 void make_path(struct map *map,
 	int x0, int y0, int x1, int y1)
 {
+    
+    uniform_cost_search(map, x0, y0, x1, y1);
 	/*
 		Currently this calls a placeholder function.
 		You should replace this with your own implementation.
 	*/
-	naive_path(map, x0, y0, x1, y1);
-}	
+	/*naive_path(map, x0, y0, x1, y1);*/
+}
+
+void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
+    
+    /* set flags for the goal and start squares */
+	map->grid[y0*map->width+x0].flags |= SQ_FLAG_START;
+	map->grid[y1*map->width+x1].flags |= SQ_FLAG_GOAL;
+    
+    /* mark the start and end positions */
+	map->grid[y0*map->width+x0].glyph = 'A';
+	map->grid[y1*map->width+x1].glyph = 'B';
+    
+    /*mark all nodes as unvisited*/
+    int i;
+    for (i = 0; i < map->size; i++){
+        /*set all visited flags to 0*/
+        map->grid[i].visited = 0;
+    }
+    
+    printf("all nodes unvisited\n");
+    /*create new pq*/
+    struct priority_queue *pq = pq_create();
+    /*Insert the root into the queue*/
+    pq_enqueue(pq, (y0*map->width+x0), 0);
+    
+    if (pq->size != 0){
+    
+        while (pq->size != 0){
+            
+            pq_dequeue(pq, &pq->heap[1].val, &pq->heap[1].priority);
+            
+            /*if node is our goal*/
+            if (map->grid->glyph == 'B'){
+                printf("Goal\n");
+            }
+            else {
+                /*else mark as visited*/
+                map->grid->visited = 1;
+                
+            }
+            
+            
+        }
+    
+    }else{
+    /*PQ is empty, return*/
+        printf("Error: Priority queue is empty!\n");
+        return;
+    }
+    
+    
+    /*draw the map*/
+    print_map(map);
+	curses_draw_map(map);
+    
+    
+
+    /* While the queue is not empty
+     Dequeue the min priority element from the queue
+     (If priorities are same, alphabetically smaller path is chosen)
+     If the path is ending in the goal state, print the path and exit
+     Else
+     Insert all the children of the dequeued element, with the cumulative costs as priority*/
+    
+
+
+}
 
 /* print the lowest cost path to stdout*/
 void print_path(struct map *map, int x0, int y0, int x1, int y1)
@@ -142,6 +213,7 @@ void set_square(struct square *sq, char c)
 		If you add more variables to the square struct, 
 		initialise them here.
 	*/
+    sq->visited = 0;
 }
 /**************************************************************/
 
@@ -160,6 +232,10 @@ struct map *map_init(int width, int height)
 
 	new_map->width = width;
 	new_map->height = height;
+    
+    /*store size of the map in the struct*/
+    int size = width * height;
+    new_map->size = size;
 
 	sq = new_map->grid;
 	for (i = 0; i < width * height; i++) {
@@ -497,12 +573,13 @@ int main(int argc, char **argv)
 		init_curses();
 	}
 
+    /*calls our function*/
 	make_path(map, x0, y0, x1, y1);
 
 	if (g_curses_interval > 0) {
 		end_curses();
 	} else {
-		print_naive_path(map, x0, y0, x1, y1);
+		/*print_naive_path(map, x0, y0, x1, y1);*/
 	}
 
 	map_destroy(map);
