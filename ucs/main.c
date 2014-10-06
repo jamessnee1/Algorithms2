@@ -39,7 +39,6 @@ struct square {
 	char glyph;		/* symbol to display this square */
 	int cost;		/* cost for the edges to this square */
 	/* you may need to add more variables to this struct */
-    int visited;
 };
 struct map {
 	struct square *grid;	/* 2D grid of squares as an array */
@@ -110,6 +109,17 @@ void make_path(struct map *map,
 
 void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
     
+    /*Use the formula pos = x + (y * width) to convert to array position*/
+    /*and x = pos%width and y = floor(pos/width) to convert back to x and y*/
+    
+    /*mark all nodes as unvisited*/
+    int i;
+    for (i = 0; i < map->size; i++){
+        /*set all visited flags to false*/
+        map->grid[i].flags &= SQ_FLAG_VISITED;
+    }
+    printf("all nodes unvisited\n");
+    
     /* set flags for the goal and start squares */
 	map->grid[y0*map->width+x0].flags |= SQ_FLAG_START;
 	map->grid[y1*map->width+x1].flags |= SQ_FLAG_GOAL;
@@ -117,20 +127,9 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
     /* mark the start and end positions */
 	map->grid[y0*map->width+x0].glyph = 'A';
 	map->grid[y1*map->width+x1].glyph = 'B';
-    printf("The start position is %i\n",y0*map->width+x0);
-    printf("The end position is %i\n", y1*map->width+x1);
+    printf("The start coordinates are %i and %i\n",((y0*map->width+x0)%map->width), ((y0*map->width+x0)/map->width));
+    printf("The end coordinates are %i and %i\n",((y1*map->width+x1)%map->width), ((y1*map->width+x1)/map->width));
     
-    /*create new temp node which will be the current node*/
-    struct square current;
-    
-    /*mark all nodes as unvisited*/
-    int i;
-    for (i = 0; i < map->size; i++){
-        /*set all visited flags to 0*/
-        map->grid[i].visited = 0;
-    }
-    
-    printf("all nodes unvisited\n");
     /*create new pq*/
     struct priority_queue *pq = pq_create();
     /*Insert the root into the queue*/
@@ -142,36 +141,29 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
     
     if (pq->size != 0){
     
-        while (pq->size != 0){
+        while (pq->size > 0){
             
             pq_dequeue(pq, &pq->heap[1].val, &pq->heap[1].priority);
             
-            /*if node is our goal*/
+            /*if dequeued node is our goal*/
             if (map->grid->glyph == 'B'){
                 printf("Goal\n");
             }
             else {
                 /*else mark as visited and put in explored array*/
-                map->grid->visited = 1;
+                map->grid->flags |= SQ_FLAG_VISITED ;
                 explored[explored_size] = *map->grid;
                 explored_size++;
                 
             }
             
             /*for each of the nodes neighbours, if the node isnt explored and not in queue*/
-            /*add to queue. else if neighbour is in queue with higher cost, replace existing*/
-            /*with neighbouring node*/
-            /*for (each neighbour){
-                if (n is not explored){
-                    if (n is not in queue){
-                        pq_enqueue(n);
-                    }
-                    else if (n is in queue with higher cost){
-                        pq_swap(existing node, n)
-                    }
-                }
-             
-             }*/
+            /*add to queue.*/
+             /*for (each neighbour){*/
+                /*if (n is not explored){*/
+                    /*if (n is not in queue){*/
+                        /*pq_enqueue(n);*/
+            
             
             
         }
@@ -240,7 +232,7 @@ void set_square(struct square *sq, char c)
 		If you add more variables to the square struct, 
 		initialise them here.
 	*/
-    sq->visited = 0;
+    
 }
 /**************************************************************/
 
