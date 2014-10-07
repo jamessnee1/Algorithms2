@@ -150,6 +150,8 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
     struct square *explored;
     explored = malloc(sizeof(struct square) * map->width * map->height);
     int explored_size = 0;
+    /*total cost for printing*/
+    int total_cost = 0;
     
     if (pq->size != 0){
     
@@ -166,8 +168,10 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
             else {
                 /*else mark as visited and put in explored array*/
                 map->grid[*dequeued_pos].flags |= SQ_FLAG_VISITED;
+                /*todo: change glyph to a O*/
                 explored[explored_size] = map->grid[*dequeued_pos];
                 explored_size++;
+                total_cost += map->grid[*dequeued_pos].cost;
                 
             }
             
@@ -206,7 +210,7 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
     /*draw the map*/
     print_map(map);
 	curses_draw_map(map);
-    printf("Total cost: %i\n", explored_size);
+    printf("Total cost: %i\n", total_cost);
     
     
 
