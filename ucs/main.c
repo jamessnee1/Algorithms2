@@ -39,6 +39,8 @@ struct square {
 	char glyph;		/* symbol to display this square */
 	int cost;		/* cost for the edges to this square */
 	/* you may need to add more variables to this struct */
+    int x_coord;
+    int y_coord;
 };
 struct map {
 	struct square *grid;	/* 2D grid of squares as an array */
@@ -116,7 +118,7 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
     int i;
     for (i = 0; i < map->size; i++){
         /*set all visited flags to false*/
-        map->grid[i].flags &= SQ_FLAG_VISITED;
+        map->grid[i].flags &= ~SQ_FLAG_VISITED;
     }
     printf("all nodes unvisited\n");
     
@@ -127,8 +129,18 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
     /* mark the start and end positions */
 	map->grid[y0*map->width+x0].glyph = 'A';
 	map->grid[y1*map->width+x1].glyph = 'B';
-    printf("The start coordinates are %i and %i\n",((y0*map->width+x0)%map->width), ((y0*map->width+x0)/map->width));
-    printf("The end coordinates are %i and %i\n",((y1*map->width+x1)%map->width), ((y1*map->width+x1)/map->width));
+    int startx = (y0*map->width+x0)%map->width;
+    int starty = (y0*map->width+x0)/map->width;
+    int endx = (y1*map->width+x1)%map->width;
+    int endy = (y1*map->width+x1)/map->width;
+    /*put start and end coordinates into grid array*/
+    map->grid[y0*map->width+x0].x_coord = startx;
+    map->grid[y0*map->width+x0].y_coord = starty;
+    map->grid[y1*map->width+x1].x_coord = endx;
+    map->grid[y1*map->width+x1].y_coord = endy;
+    
+    printf("The start coordinates are %i and %i\n", startx, starty);
+    printf("The end coordinates are %i and %i\n", endx, endy);
     
     /*create new pq*/
     struct priority_queue *pq = pq_create();
@@ -143,22 +155,38 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
     
         while (pq->size > 0){
             
+            /*put value about to be dequeued into a pointer so we can use it to find neighbours*/
+            int *dequeued_pos = &pq->heap[1].val;
             pq_dequeue(pq, &pq->heap[1].val, &pq->heap[1].priority);
             
             /*if dequeued node is our goal*/
-            if (map->grid->glyph == 'B'){
+            if (map->grid[*dequeued_pos].flags & SQ_FLAG_GOAL){
                 printf("Goal\n");
             }
             else {
                 /*else mark as visited and put in explored array*/
-                map->grid->flags |= SQ_FLAG_VISITED ;
-                explored[explored_size] = *map->grid;
+                map->grid[*dequeued_pos].flags |= SQ_FLAG_VISITED;
+                explored[explored_size] = map->grid[*dequeued_pos];
                 explored_size++;
                 
             }
             
             /*for each of the nodes neighbours, if the node isnt explored and not in queue*/
             /*add to queue.*/
+            int count;
+            for (count = 0; count < 4; count++){
+                
+                /*if neighbour is not explored*/
+                if (map->grid[*dequeued_pos + 1].flags & ~SQ_FLAG_VISITED){
+                    printf("node next in array not explored. Add to queue\n");
+                }
+                if (map->grid[*dequeued_pos - 1].flags & ~SQ_FLAG_VISITED){
+                    printf("node previous in array not explored. Add to queue\n");
+                }
+                
+                
+                
+            }
              /*for (each neighbour){*/
                 /*if (n is not explored){*/
                     /*if (n is not in queue){*/
