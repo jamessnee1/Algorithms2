@@ -119,6 +119,10 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
     for (i = 0; i < map->size; i++){
         /*set all visited flags to false*/
         map->grid[i].flags &= ~SQ_FLAG_VISITED;
+        if (map->grid[i].glyph == '#'){
+            /*set to impassable*/
+            map->grid[i].flags |= SQ_FLAG_IMPASSABLE;
+        }
     }
     printf("all nodes unvisited\n");
     
@@ -196,18 +200,20 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
             if (north <= 0){
                 /*out of range, north stays the same*/
                 north = new_y;
-                
             }
             int south = new_y + 1;
             if (south >= map->height){
+                /*out of range, south stays the same*/
                 south = new_y;
             }
             int east = new_x + 1;
             if (east >= map->width){
+                /*out of range, east stays the same*/
                 east = new_x;
             }
             int west = new_x - 1;
             if (west <= 0){
+                /*out of range, west stays the same*/
                 west = new_x;
             }
             
