@@ -133,14 +133,12 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
     int starty = (y0*map->width+x0)/map->width;
     int endx = (y1*map->width+x1)%map->width;
     int endy = (y1*map->width+x1)/map->width;
+    
     /*put start and end coordinates into grid array*/
     map->grid[y0*map->width+x0].x_coord = startx;
     map->grid[y0*map->width+x0].y_coord = starty;
     map->grid[y1*map->width+x1].x_coord = endx;
     map->grid[y1*map->width+x1].y_coord = endy;
-    
-    printf("The start coordinates are %i and %i\n", startx, starty);
-    printf("The end coordinates are %i and %i\n", endx, endy);
     
     /*create new pq*/
     struct priority_queue *pq = pq_create();
@@ -153,6 +151,8 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
     int explored_size = 0;
     /*total cost for printing*/
     int total_cost = 0;
+    
+    
     if (pq->size != 0){
     
         while (pq->size > 0){
@@ -161,6 +161,11 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
             int *dequeued_pos = &pq->heap[1].val;
             pq_dequeue(pq, &pq->heap[1].val, &pq->heap[1].priority);
             
+            /*first, get the dequeued position's x and y coordinates*/
+            int new_x = *dequeued_pos % map->width;
+            int new_y = *dequeued_pos / map->width;
+            printf("new x is %i, new y is %i\n", new_x, new_y);
+            
             /*if dequeued node is our goal*/
             if (map->grid[*dequeued_pos].flags & SQ_FLAG_GOAL){
                 printf("Goal\n");
@@ -168,7 +173,13 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
             else {
                 /*else mark as visited and put in explored array*/
                 map->grid[*dequeued_pos].flags |= SQ_FLAG_VISITED;
-                /*todo: change glyph to a O*/
+                /*put the X and Y coords into the node*/
+                map->grid[*dequeued_pos].x_coord = new_x;
+                map->grid[*dequeued_pos].y_coord = new_y;
+                /*change glyph to a O*/
+                if (map->grid[*dequeued_pos].glyph != 'A' && map->grid[*dequeued_pos].glyph != 'B'){
+                   map->grid[*dequeued_pos].glyph = 'o';
+                }
                 explored[explored_size] = map->grid[*dequeued_pos];
                 explored_size++;
                 total_cost += map->grid[*dequeued_pos].cost;
@@ -178,17 +189,27 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
             /*for each of the nodes neighbours, if the node isnt explored and not in queue*/
             /*add to queue.*/
             
-            /*first, get the dequeued position's x and y coordinates*/
-            int new_x = *dequeued_pos % map->width;
-            int new_y = *dequeued_pos / map->width;
-            
-            printf("new x is %i, new y is %i\n", new_x, new_y);
-            
             /*create new ints for north, south, east and west*/
+            /*do bounds checking on these too*/
+            
             int north = new_y - 1;
+            if (north <= 0){
+                /*out of range, north stays the same*/
+                north = new_y;
+                
+            }
             int south = new_y + 1;
+            if (south >= map->height){
+                south = new_y;
+            }
             int east = new_x + 1;
+            if (east >= map->width){
+                east = new_x;
+            }
             int west = new_x - 1;
+            if (west <= 0){
+                west = new_x;
+            }
             
             printf("north is %i, %i, south is %i, %i, east is %i, %i, west is %i, %i\n", new_x, north, new_x, south, east, new_y, west, new_y);
             
@@ -197,14 +218,25 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
             /*convert to 1D*/
             int north_array_pos = new_x + (north * map->width);
             printf("Bit flag is set to %i\n", map->grid[north_array_pos].flags);
-            if (map->grid[north_array_pos].flags != 011){
+            /*bitwise check*/
+            if (map->grid[north_array_pos].flags & ~SQ_FLAG_VISITED && map->grid[north_array_pos].flags & ~SQ_FLAG_ENQUEUED){
                 /*add to queue*/
                 pq_enqueue(pq, (north_array_pos), map->grid[north_array_pos].cost + total_cost);
                 printf("north\n");
                     
             }
             
-
+            /*south*/
+            /*convert to 1D*/
+            int south_array_pos = new_x + (south * map->width);
+            
+            /*east*/
+            /*convert to 1D*/
+            int east_array_pos = east + (new_y * map->width);
+            
+            /*west*/
+            /*convert to 1D*/
+            int west_array_pos = west + (new_y * map->width);
             
              /*for (each neighbour){*/
                 /*if (n is not explored){*/
