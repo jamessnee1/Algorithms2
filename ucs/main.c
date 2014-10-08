@@ -144,7 +144,8 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
     
     /*create new pq*/
     struct priority_queue *pq = pq_create();
-    /*Insert the root into the queue*/
+    /*Set the root to enqueued status and insert the root into the queue*/
+    map->grid[y0*map->width+x0].flags |= SQ_FLAG_ENQUEUED;
     pq_enqueue(pq, (y0*map->width+x0), 0);
     /*create new struct array containing explored nodes, this will be used to calculate path cost */
     struct square *explored;
@@ -152,7 +153,6 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
     int explored_size = 0;
     /*total cost for printing*/
     int total_cost = 0;
-    
     if (pq->size != 0){
     
         while (pq->size > 0){
@@ -177,20 +177,35 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
             
             /*for each of the nodes neighbours, if the node isnt explored and not in queue*/
             /*add to queue.*/
-            int count;
-            for (count = 0; count < 4; count++){
+            
+            /*first, get the dequeued position's x and y coordinates*/
+            int new_x = *dequeued_pos % map->width;
+            int new_y = *dequeued_pos / map->width;
+            
+            printf("new x is %i, new y is %i\n", new_x, new_y);
+            
+            /*create new ints for north, south, east and west*/
+            int north = new_y - 1;
+            int south = new_y + 1;
+            int east = new_x + 1;
+            int west = new_x - 1;
+            
+            printf("north is %i, %i, south is %i, %i, east is %i, %i, west is %i, %i\n", new_x, north, new_x, south, east, new_y, west, new_y);
+            
                 
-                /*if neighbour is not explored*/
-                if (map->grid[*dequeued_pos + 1].flags & ~SQ_FLAG_VISITED){
-                    printf("node next in array not explored. Add to queue\n");
-                }
-                if (map->grid[*dequeued_pos - 1].flags & ~SQ_FLAG_VISITED){
-                    printf("node previous in array not explored. Add to queue\n");
-                }
-                
-                
-                
+            /*north*/
+            /*convert to 1D*/
+            int north_array_pos = new_x + (north * map->width);
+            printf("Bit flag is set to %i\n", map->grid[north_array_pos].flags);
+            if (map->grid[north_array_pos].flags != 011){
+                /*add to queue*/
+                pq_enqueue(pq, (north_array_pos), map->grid[north_array_pos].cost + total_cost);
+                printf("north\n");
+                    
             }
+            
+
+            
              /*for (each neighbour){*/
                 /*if (n is not explored){*/
                     /*if (n is not in queue){*/
@@ -212,8 +227,8 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
 	curses_draw_map(map);
     printf("Total cost: %i\n", total_cost);
     
-    
-
+    /*free explored*/
+    free(explored);
     /* While the queue is not empty
      Dequeue the min priority element from the queue
      (If priorities are same, alphabetically smaller path is chosen)
