@@ -119,12 +119,10 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
     for (i = 0; i < map->size; i++){
         /*set all visited flags to false*/
         map->grid[i].flags &= ~SQ_FLAG_VISITED;
-        if (map->grid[i].glyph == '#'){
-            /*set to impassable*/
-            map->grid[i].flags |= SQ_FLAG_IMPASSABLE;
-        }
+        
     }
-    printf("all nodes unvisited\n");
+    
+    curses_draw_map(map);
     
     /* set flags for the goal and start squares */
 	map->grid[y0*map->width+x0].flags |= SQ_FLAG_START;
@@ -149,10 +147,9 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
     /*Set the root to enqueued status and insert the root into the queue*/
     map->grid[y0*map->width+x0].flags |= SQ_FLAG_ENQUEUED;
     pq_enqueue(pq, (y0*map->width+x0), 0);
-    /*create new struct array containing explored nodes, this will be used to calculate path cost */
-    struct square *explored;
-    explored = malloc(sizeof(struct square) * map->width * map->height);
-    int explored_size = 0;
+    
+    curses_draw_map(map);
+    
     /*total cost for printing*/
     int total_cost = 0;
     
@@ -161,21 +158,30 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
     
         while (pq->size > 0){
             
+            curses_draw_map(map);
+            
             /*put value about to be dequeued into a pointer so we can use it to find neighbours*/
             int *dequeued_pos = &pq->heap[1].val;
             pq_dequeue(pq, &pq->heap[1].val, &pq->heap[1].priority);
             
+            curses_draw_map(map);
+            
             /*first, get the dequeued position's x and y coordinates*/
             int new_x = *dequeued_pos % map->width;
             int new_y = *dequeued_pos / map->width;
-            printf("new x is %i, new y is %i\n", new_x, new_y);
+            
             
             /*if dequeued node is our goal*/
             if (map->grid[*dequeued_pos].flags & SQ_FLAG_GOAL){
-                printf("Goal\n");
+                
+                /*draw the map*/
+                print_map(map);
+                curses_draw_map(map);
+                printf("Total cost: %i\n", total_cost);
+                
             }
             else {
-                /*else mark as visited and put in explored array*/
+                /*else mark as visited*/
                 map->grid[*dequeued_pos].flags |= SQ_FLAG_VISITED;
                 /*put the X and Y coords into the node*/
                 map->grid[*dequeued_pos].x_coord = new_x;
@@ -184,9 +190,10 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
                 if (map->grid[*dequeued_pos].glyph != 'A' && map->grid[*dequeued_pos].glyph != 'B'){
                    map->grid[*dequeued_pos].glyph = 'o';
                 }
-                explored[explored_size] = map->grid[*dequeued_pos];
-                explored_size++;
+                /*update total cost*/
                 total_cost += map->grid[*dequeued_pos].cost;
+                
+                curses_draw_map(map);
                 
             }
             
@@ -217,40 +224,102 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
                 west = new_x;
             }
             
-            printf("north is %i, %i, south is %i, %i, east is %i, %i, west is %i, %i\n", new_x, north, new_x, south, east, new_y, west, new_y);
-            
+            curses_draw_map(map);
                 
             /*north*/
             /*convert to 1D*/
             int north_array_pos = new_x + (north * map->width);
-            printf("Bit flag is set to %i\n", map->grid[north_array_pos].flags);
-            /*bitwise check*/
-            if (map->grid[north_array_pos].flags & ~SQ_FLAG_VISITED && map->grid[north_array_pos].flags & ~SQ_FLAG_ENQUEUED){
-                /*add to queue*/
-                pq_enqueue(pq, (north_array_pos), map->grid[north_array_pos].cost + total_cost);
-                printf("north\n");
+            /*if not visited*/
+            if ((map->grid[north_array_pos].flags & SQ_FLAG_VISITED) != SQ_FLAG_VISITED){
+            
+                /*set to visited*/
+                map->grid[north_array_pos].flags |= SQ_FLAG_VISITED;
+                
+                /*if not enqueued*/
+                if ((map->grid[north_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
+                    
+                    /*add to queue*/
+                    map->grid[north_array_pos].flags |= SQ_FLAG_ENQUEUED;
+                    pq_enqueue(pq, (north_array_pos), map->grid[north_array_pos].cost + total_cost);
+                
+                }
+                
                     
             }
+            
+            curses_draw_map(map);
             
             /*south*/
             /*convert to 1D*/
             int south_array_pos = new_x + (south * map->width);
+            /*if not visited*/
+            if ((map->grid[south_array_pos].flags & SQ_FLAG_VISITED) != SQ_FLAG_VISITED){
+                
+                /*set to visited*/
+                map->grid[south_array_pos].flags |= SQ_FLAG_VISITED;
+                
+                /*if not enqueued*/
+                if ((map->grid[south_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
+                    
+                    /*add to queue*/
+                    map->grid[south_array_pos].flags |= SQ_FLAG_ENQUEUED;
+                    pq_enqueue(pq, (south_array_pos), map->grid[south_array_pos].cost + total_cost);
+                    
+                }
+                
+                
+            }
+            
+            curses_draw_map(map);
+
             
             /*east*/
             /*convert to 1D*/
             int east_array_pos = east + (new_y * map->width);
+            /*if not visited*/
+            if ((map->grid[east_array_pos].flags & SQ_FLAG_VISITED) != SQ_FLAG_VISITED){
+                
+                /*set to visited*/
+                map->grid[east_array_pos].flags |= SQ_FLAG_VISITED;
+                
+                /*if not enqueued*/
+                if ((map->grid[east_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
+                    
+                    /*add to queue*/
+                    map->grid[east_array_pos].flags |= SQ_FLAG_ENQUEUED;
+                    pq_enqueue(pq, (east_array_pos), map->grid[east_array_pos].cost + total_cost);
+                    
+                }
+                
+                
+            }
             
+            curses_draw_map(map);
+
             /*west*/
             /*convert to 1D*/
             int west_array_pos = west + (new_y * map->width);
+            /*if not visited*/
+            if ((map->grid[west_array_pos].flags & SQ_FLAG_VISITED) != SQ_FLAG_VISITED){
+                
+                /*set to visited*/
+                map->grid[west_array_pos].flags |= SQ_FLAG_VISITED;
+                
+                /*if not enqueued*/
+                if ((map->grid[west_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
+                    
+                    /*add to queue*/
+                    map->grid[west_array_pos].flags |= SQ_FLAG_ENQUEUED;
+                    pq_enqueue(pq, (west_array_pos), map->grid[west_array_pos].cost + total_cost);
+                    
+                }
+                
+                
+            }
             
-             /*for (each neighbour){*/
-                /*if (n is not explored){*/
-                    /*if (n is not in queue){*/
-                        /*pq_enqueue(n);*/
-            
-            
-            
+            curses_draw_map(map);
+
+            /*end while*/
         }
     
     }else{
@@ -259,23 +328,6 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
         return;
     }
     
-    
-    /*draw the map*/
-    print_map(map);
-	curses_draw_map(map);
-    printf("Total cost: %i\n", total_cost);
-    
-    /*free explored*/
-    free(explored);
-    /* While the queue is not empty
-     Dequeue the min priority element from the queue
-     (If priorities are same, alphabetically smaller path is chosen)
-     If the path is ending in the goal state, print the path and exit
-     Else
-     Insert all the children of the dequeued element, with the cumulative costs as priority*/
-    
-
-
 }
 
 /* print the lowest cost path to stdout*/
