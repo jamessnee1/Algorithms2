@@ -39,6 +39,7 @@ struct square {
 	char glyph;		/* symbol to display this square */
 	int cost;		/* cost for the edges to this square */
 	/* you may need to add more variables to this struct */
+    struct square *previous;
     int x_coord;
     int y_coord;
 };
@@ -196,9 +197,7 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
                 curses_draw_map(map);
                 
             }
-            
-            /*for each of the nodes neighbours, if the node isnt explored and not in queue*/
-            /*add to queue.*/
+
             
             /*create new ints for north, south, east and west*/
             /*do bounds checking on these too*/
@@ -234,6 +233,8 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
             
                 /*set to visited*/
                 map->grid[north_array_pos].flags |= SQ_FLAG_VISITED;
+                /*put previous explored node into previous*/
+                map->grid[north_array_pos].previous = &map->grid[*dequeued_pos];
                 
                 /*if not enqueued*/
                 if ((map->grid[north_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
@@ -257,6 +258,8 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
                 
                 /*set to visited*/
                 map->grid[south_array_pos].flags |= SQ_FLAG_VISITED;
+                /*put previous explored node into previous*/
+                map->grid[south_array_pos].previous = &map->grid[*dequeued_pos];
                 
                 /*if not enqueued*/
                 if ((map->grid[south_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
@@ -281,6 +284,8 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
                 
                 /*set to visited*/
                 map->grid[east_array_pos].flags |= SQ_FLAG_VISITED;
+                /*put previous explored node into previous*/
+                map->grid[east_array_pos].previous = &map->grid[*dequeued_pos];
                 
                 /*if not enqueued*/
                 if ((map->grid[east_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
@@ -304,6 +309,8 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
                 
                 /*set to visited*/
                 map->grid[west_array_pos].flags |= SQ_FLAG_VISITED;
+                /*put previous explored node into previous*/
+                map->grid[west_array_pos].previous = &map->grid[*dequeued_pos];
                 
                 /*if not enqueued*/
                 if ((map->grid[west_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
