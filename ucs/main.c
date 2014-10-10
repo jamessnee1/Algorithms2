@@ -227,48 +227,59 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
             /*north*/
             /*convert to 1D*/
             int north_array_pos = new_x + (north * map->width);
-            /*if not visited*/
-            if ((map->grid[north_array_pos].flags & SQ_FLAG_VISITED) != SQ_FLAG_VISITED){
+            /*if not impassable*/
+            if ((map->grid[north_array_pos].flags & SQ_FLAG_IMPASSABLE) != SQ_FLAG_IMPASSABLE){
                 
-                /*set to visited*/
-                map->grid[north_array_pos].flags |= SQ_FLAG_VISITED;
-                
-                /*if not enqueued*/
-                if ((map->grid[north_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
+                /*if not visited*/
+                if ((map->grid[north_array_pos].flags & SQ_FLAG_VISITED) != SQ_FLAG_VISITED){
                     
-                    /*put previous explored node into previous*/
-                    map->grid[north_array_pos].previous = &map->grid[*dequeued_pos];
-                    /*add to queue*/
-                    map->grid[north_array_pos].flags |= SQ_FLAG_ENQUEUED;
-                    pq_enqueue(pq, (north_array_pos), map->grid[north_array_pos].cost + total_cost);
-                
+                    /*set to visited*/
+                    map->grid[north_array_pos].flags |= SQ_FLAG_VISITED;
+                    
+                    /*if not enqueued*/
+                    if ((map->grid[north_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
+                        
+                        /*put previous explored node into previous*/
+                        map->grid[north_array_pos].previous = &map->grid[*dequeued_pos];
+                        /*add to queue*/
+                        map->grid[north_array_pos].flags |= SQ_FLAG_ENQUEUED;
+                        pq_enqueue(pq, (north_array_pos), map->grid[north_array_pos].cost + total_cost);
+                        
+                    }
+                    
+                    
                 }
-                
-                    
+            
             }
+
             
             curses_draw_map(map);
             
             /*south*/
             /*convert to 1D*/
             int south_array_pos = new_x + (south * map->width);
-            /*if not visited*/
-            if ((map->grid[south_array_pos].flags & SQ_FLAG_VISITED) != SQ_FLAG_VISITED){
+            /*if not impassable*/
+            if ((map->grid[south_array_pos].flags & SQ_FLAG_IMPASSABLE) != SQ_FLAG_IMPASSABLE){
                 
-                /*set to visited*/
-                map->grid[south_array_pos].flags |= SQ_FLAG_VISITED;
-                
-                /*if not enqueued*/
-                if ((map->grid[south_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
+                /*if not visited*/
+                if ((map->grid[south_array_pos].flags & SQ_FLAG_VISITED) != SQ_FLAG_VISITED){
                     
-                    /*put previous explored node into previous*/
-                    map->grid[south_array_pos].previous = &map->grid[*dequeued_pos];
-                    /*add to queue*/
-                    map->grid[south_array_pos].flags |= SQ_FLAG_ENQUEUED;
-                    pq_enqueue(pq, (south_array_pos), map->grid[south_array_pos].cost + total_cost);
+                    /*set to visited*/
+                    map->grid[south_array_pos].flags |= SQ_FLAG_VISITED;
+                    
+                    /*if not enqueued*/
+                    if ((map->grid[south_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
+                        
+                        /*put previous explored node into previous*/
+                        map->grid[south_array_pos].previous = &map->grid[*dequeued_pos];
+                        /*add to queue*/
+                        map->grid[south_array_pos].flags |= SQ_FLAG_ENQUEUED;
+                        pq_enqueue(pq, (south_array_pos), map->grid[south_array_pos].cost + total_cost);
+                        
+                    }
+                    
                     
                 }
-                
                 
             }
             
@@ -278,23 +289,28 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
             /*east*/
             /*convert to 1D*/
             int east_array_pos = east + (new_y * map->width);
-            /*if not visited*/
-            if ((map->grid[east_array_pos].flags & SQ_FLAG_VISITED) != SQ_FLAG_VISITED){
+            /*if not impassable*/
+            if ((map->grid[east_array_pos].flags & SQ_FLAG_IMPASSABLE) != SQ_FLAG_IMPASSABLE){
                 
-                /*set to visited*/
-                map->grid[east_array_pos].flags |= SQ_FLAG_VISITED;
-                
-                /*if not enqueued*/
-                if ((map->grid[east_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
+                /*if not visited*/
+                if ((map->grid[east_array_pos].flags & SQ_FLAG_VISITED) != SQ_FLAG_VISITED){
                     
-                    /*put previous explored node into previous*/
-                    map->grid[east_array_pos].previous = &map->grid[*dequeued_pos];
-                    /*add to queue*/
-                    map->grid[east_array_pos].flags |= SQ_FLAG_ENQUEUED;
-                    pq_enqueue(pq, (east_array_pos), map->grid[east_array_pos].cost + total_cost);
+                    /*set to visited*/
+                    map->grid[east_array_pos].flags |= SQ_FLAG_VISITED;
+                    
+                    /*if not enqueued*/
+                    if ((map->grid[east_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
+                        
+                        /*put previous explored node into previous*/
+                        map->grid[east_array_pos].previous = &map->grid[*dequeued_pos];
+                        /*add to queue*/
+                        map->grid[east_array_pos].flags |= SQ_FLAG_ENQUEUED;
+                        pq_enqueue(pq, (east_array_pos), map->grid[east_array_pos].cost + total_cost);
+                        
+                    }
+                    
                     
                 }
-                
                 
             }
             
@@ -303,26 +319,30 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
             /*west*/
             /*convert to 1D*/
             int west_array_pos = west + (new_y * map->width);
-            /*if not visited*/
-            if ((map->grid[west_array_pos].flags & SQ_FLAG_VISITED) != SQ_FLAG_VISITED){
+            /*if not impassable*/
+            if ((map->grid[west_array_pos].flags & SQ_FLAG_IMPASSABLE) != SQ_FLAG_IMPASSABLE){
                 
-                /*set to visited*/
-                map->grid[west_array_pos].flags |= SQ_FLAG_VISITED;
-                
-                /*if not enqueued*/
-                if ((map->grid[west_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
+                /*if not visited*/
+                if ((map->grid[west_array_pos].flags & SQ_FLAG_VISITED) != SQ_FLAG_VISITED){
                     
-                    /*put previous explored node into previous*/
-                    map->grid[west_array_pos].previous = &map->grid[*dequeued_pos];
-                    /*add to queue*/
-                    map->grid[west_array_pos].flags |= SQ_FLAG_ENQUEUED;
-                    pq_enqueue(pq, (west_array_pos), map->grid[west_array_pos].cost + total_cost);
+                    /*set to visited*/
+                    map->grid[west_array_pos].flags |= SQ_FLAG_VISITED;
+                    
+                    /*if not enqueued*/
+                    if ((map->grid[west_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
+                        
+                        /*put previous explored node into previous*/
+                        map->grid[west_array_pos].previous = &map->grid[*dequeued_pos];
+                        /*add to queue*/
+                        map->grid[west_array_pos].flags |= SQ_FLAG_ENQUEUED;
+                        pq_enqueue(pq, (west_array_pos), map->grid[west_array_pos].cost + total_cost);
+                        
+                    }
+                    
                     
                 }
                 
-                
             }
-            
             curses_draw_map(map);
 
             /*end while*/
