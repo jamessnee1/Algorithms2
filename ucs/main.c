@@ -39,7 +39,7 @@ struct square {
 	char glyph;		/* symbol to display this square */
 	int cost;		/* cost for the edges to this square */
 	/* you may need to add more variables to this struct */
-    struct square *previous;
+    struct square *previous; /*store the previous node for the path*/
     int x_coord;
     int y_coord;
 };
@@ -101,13 +101,9 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1);
 void make_path(struct map *map,
 	int x0, int y0, int x1, int y1)
 {
-    
+    /**/
     uniform_cost_search(map, x0, y0, x1, y1);
-	/*
-		Currently this calls a placeholder function.
-		You should replace this with your own implementation.
-	*/
-	/*naive_path(map, x0, y0, x1, y1);*/
+	
 }
 
 void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
@@ -245,6 +241,7 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
                         map->grid[north_array_pos].flags |= SQ_FLAG_ENQUEUED;
                         pq_enqueue(pq, (north_array_pos), map->grid[north_array_pos].cost + total_cost);
                         
+                        
                     }
                     
                     
@@ -364,28 +361,39 @@ void print_path(struct map *map, int x0, int y0, int x1, int y1)
 	int width = map->width;
 	struct square *sq;
     
+    int pathindex = 0;
     
-	/* for our naive path, head west/east first then north/south */
-	i = x0;
-	j = y0;
-	while ((i != x1) || (j != y1)) {
-		if (i > x1) { i--; }
-		else if (i < x1) { i++; }
-		else if (j > y1) { j--; }
-		else if (j < y1) { j++; }
-		sq = map->grid + j * width + i;
-		sq->glyph = 'o';
-		cost += sq->cost;
-	}
+    /*malloc with size of whole map*/
+    sq = malloc(sizeof(struct square) * (map->width * map->height));
+    /*convert our start and goal nodes to 1D*/
+    int start = (x0 + (y0 * width));
+    int goal = (x1 + (y1 * width));
     
-	/* mark the start and end positions */
-	map->grid[y0*width+x0].glyph = 'A';
-	map->grid[y1*width+x1].glyph = 'B';
+    struct square *current;
+    /*set current to goal node*/
+    current = &map->grid[goal];
     
-	/* you will need to calculate the path cost. */
+    /*while current[goal] != current[start]*/
+    /*set glyph to o*/
+    /*set current to previous*/
+    
+    while (current != &map->grid[start]){
+    
+        current->glyph = 'o';
+        cost += current->cost;
+        /*add current to sq array*/
+        sq[pathindex] = *current;
+        pathindex++;
+        current = current->previous;
+        
+    }
+    
+    map->grid[start].glyph = 'A';
+    map->grid[goal].glyph = 'B';
     
 	/* output the map */
 	print_map(map);
+    
     
 	/* for our naive path, head west/east first then north/south */
 	i = x0;
@@ -405,6 +413,8 @@ void print_path(struct map *map, int x0, int y0, int x1, int y1)
 	} else {
 		printf("No path found.\n");
 	}
+    
+    free(sq);
 
 	
 }
