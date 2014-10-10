@@ -164,6 +164,8 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
             /*put value about to be dequeued into a pointer so we can use it to find neighbours*/
             int *dequeued_pos = &pq->heap[1].val;
             pq_dequeue(pq, &pq->heap[1].val, &pq->heap[1].priority);
+            /*set enqueue flag to false*/
+            map->grid[*dequeued_pos].flags &= ~SQ_FLAG_ENQUEUED;
             
             curses_draw_map(map);
             
@@ -177,6 +179,7 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
                 
                 /*draw the map*/
                 curses_draw_map(map);
+                break;
                 
                 
             }
