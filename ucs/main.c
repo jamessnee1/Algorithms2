@@ -173,12 +173,11 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
             
             
             /*if dequeued node is our goal*/
-            if (map->grid[*dequeued_pos].flags & SQ_FLAG_GOAL){
+            if ((map->grid[*dequeued_pos].flags & SQ_FLAG_GOAL) == SQ_FLAG_GOAL){
                 
                 /*draw the map*/
-                print_map(map);
                 curses_draw_map(map);
-                printf("Total cost: %i\n", total_cost);
+                
                 
             }
             else {
@@ -187,10 +186,7 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
                 /*put the X and Y coords into the node*/
                 map->grid[*dequeued_pos].x_coord = new_x;
                 map->grid[*dequeued_pos].y_coord = new_y;
-                /*change glyph to a O*/
-                if (map->grid[*dequeued_pos].glyph != 'A' && map->grid[*dequeued_pos].glyph != 'B'){
-                   map->grid[*dequeued_pos].glyph = 'o';
-                }
+                
                 /*update total cost*/
                 total_cost += map->grid[*dequeued_pos].cost;
                 
@@ -230,15 +226,15 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
             int north_array_pos = new_x + (north * map->width);
             /*if not visited*/
             if ((map->grid[north_array_pos].flags & SQ_FLAG_VISITED) != SQ_FLAG_VISITED){
-            
+                
                 /*set to visited*/
                 map->grid[north_array_pos].flags |= SQ_FLAG_VISITED;
-                /*put previous explored node into previous*/
-                map->grid[north_array_pos].previous = &map->grid[*dequeued_pos];
                 
                 /*if not enqueued*/
                 if ((map->grid[north_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
                     
+                    /*put previous explored node into previous*/
+                    map->grid[north_array_pos].previous = &map->grid[*dequeued_pos];
                     /*add to queue*/
                     map->grid[north_array_pos].flags |= SQ_FLAG_ENQUEUED;
                     pq_enqueue(pq, (north_array_pos), map->grid[north_array_pos].cost + total_cost);
@@ -258,12 +254,12 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
                 
                 /*set to visited*/
                 map->grid[south_array_pos].flags |= SQ_FLAG_VISITED;
-                /*put previous explored node into previous*/
-                map->grid[south_array_pos].previous = &map->grid[*dequeued_pos];
                 
                 /*if not enqueued*/
                 if ((map->grid[south_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
                     
+                    /*put previous explored node into previous*/
+                    map->grid[south_array_pos].previous = &map->grid[*dequeued_pos];
                     /*add to queue*/
                     map->grid[south_array_pos].flags |= SQ_FLAG_ENQUEUED;
                     pq_enqueue(pq, (south_array_pos), map->grid[south_array_pos].cost + total_cost);
@@ -284,12 +280,12 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
                 
                 /*set to visited*/
                 map->grid[east_array_pos].flags |= SQ_FLAG_VISITED;
-                /*put previous explored node into previous*/
-                map->grid[east_array_pos].previous = &map->grid[*dequeued_pos];
                 
                 /*if not enqueued*/
                 if ((map->grid[east_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
                     
+                    /*put previous explored node into previous*/
+                    map->grid[east_array_pos].previous = &map->grid[*dequeued_pos];
                     /*add to queue*/
                     map->grid[east_array_pos].flags |= SQ_FLAG_ENQUEUED;
                     pq_enqueue(pq, (east_array_pos), map->grid[east_array_pos].cost + total_cost);
@@ -309,12 +305,12 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
                 
                 /*set to visited*/
                 map->grid[west_array_pos].flags |= SQ_FLAG_VISITED;
-                /*put previous explored node into previous*/
-                map->grid[west_array_pos].previous = &map->grid[*dequeued_pos];
                 
                 /*if not enqueued*/
                 if ((map->grid[west_array_pos].flags & SQ_FLAG_ENQUEUED) != SQ_FLAG_ENQUEUED){
                     
+                    /*put previous explored node into previous*/
+                    map->grid[west_array_pos].previous = &map->grid[*dequeued_pos];
                     /*add to queue*/
                     map->grid[west_array_pos].flags |= SQ_FLAG_ENQUEUED;
                     pq_enqueue(pq, (west_array_pos), map->grid[west_array_pos].cost + total_cost);
@@ -340,11 +336,54 @@ void uniform_cost_search(struct map *map, int x0, int y0, int x1, int y1){
 /* print the lowest cost path to stdout*/
 void print_path(struct map *map, int x0, int y0, int x1, int y1)
 {
-	/*
-		You will need to write your own code to print the true
-		lowest cost path.
-	*/
-	print_naive_path(map, x0, y0, x1, y1);
+	int cost = 0;
+	int i, j;
+	int width = map->width;
+	struct square *sq;
+    
+    
+	/* for our naive path, head west/east first then north/south */
+	i = x0;
+	j = y0;
+	while ((i != x1) || (j != y1)) {
+		if (i > x1) { i--; }
+		else if (i < x1) { i++; }
+		else if (j > y1) { j--; }
+		else if (j < y1) { j++; }
+		sq = map->grid + j * width + i;
+		sq->glyph = 'o';
+		cost += sq->cost;
+	}
+    
+	/* mark the start and end positions */
+	map->grid[y0*width+x0].glyph = 'A';
+	map->grid[y1*width+x1].glyph = 'B';
+    
+	/* you will need to calculate the path cost. */
+    
+	/* output the map */
+	print_map(map);
+    
+	/* for our naive path, head west/east first then north/south */
+	i = x0;
+	j = y0;
+	while ((i != x1) || (j != y1)) {
+		printf("(%d, %d) -> ", i, j);
+		if (i > x1) { i--; }
+		else if (i < x1) { i++; }
+		else if (j > y1) { j--; }
+		else if (j < y1) { j++; }
+	}
+    
+	printf("(%d, %d)\n", x1, y1);
+    
+	if (cost >= 0) {
+		printf("Path cost: %d\n", cost);
+	} else {
+		printf("No path found.\n");
+	}
+
+	
 }
 
 /* sets the values for the grid square */
@@ -742,7 +781,7 @@ int main(int argc, char **argv)
 	if (g_curses_interval > 0) {
 		end_curses();
 	} else {
-		/*print_naive_path(map, x0, y0, x1, y1);*/
+		print_path(map, x0, y0, x1, y1);
 	}
 
 	map_destroy(map);
